@@ -1,0 +1,185 @@
+{
+    "eggs": {
+        "rong_xanh": {
+            "name": "Trứng Rồng Xanh",
+            "growTime": 5,
+            "baseReward": 50,
+            "levelRequired": 1,
+            "emoji": "🐉"
+        },
+        "phuong_hoang": {
+            "name": "Trứng Phượng Hoàng",
+            "growTime": 30,
+            "baseReward": 80,
+            "levelRequired": 2,
+            "emoji": "🦅"
+        },
+        "ky_lan": {
+            "name": "Trứng Kỳ Lân",
+            "growTime": 60,
+            "baseReward": 120,
+            "levelRequired": 3,
+            "emoji": "🦄"
+        },
+        "bach_ho": {
+            "name": "Trứng Bạch Hổ",
+            "growTime": 120,
+            "baseReward": 200,
+            "levelRequired": 4,
+            "emoji": "🐯"
+        },
+        "huyen_vu": {
+            "name": "Trứng Huyền Vũ",
+            "growTime": 300,
+            "baseReward": 300,
+            "levelRequired": 5,
+            "emoji": "🐢"
+        }
+    },
+    "monsters": {
+        "yeu_tinh": {
+            "name": "Yêu Tinh",
+            "successRate": 80,
+            "reward": { "min": 20, "max": 100 },
+            "levelRequired": 1,
+            "emoji": "👻",
+            "loot": "linh_hon_yeu_tinh"
+        },
+        "tinh_ho_ly": {
+            "name": "Tinh Hồ Ly",
+            "successRate": 75,
+            "reward": { "min": 30, "max": 100 },
+            "levelRequired": 1,
+            "emoji": "🦊",
+            "loot": "linh_hon_ho_ly"
+        },
+        "ma_rung": {
+            "name": "Ma Rừng",
+            "successRate": 60,
+            "reward": { "min": 40, "max": 100 },
+            "levelRequired": 2,
+            "emoji": "👹",
+            "loot": "linh_hon_ma_rung"
+        },
+        "linh_duong": {
+            "name": "Linh Dương",
+            "successRate": 50,
+            "reward": { "min": 50, "max": 100 },
+            "levelRequired": 3,
+            "emoji": "🦌",
+            "loot": "linh_hon_linh_duong"
+        },
+        "ho_than": {
+            "name": "Hổ Thần",
+            "successRate": 30,
+            "reward": { "min": 60, "max": 100 },
+            "levelRequired": 4,
+            "emoji": "🐅",
+            "loot": "linh_hon_ho_than"
+        },
+        "gau_tinh": {
+            "name": "Gấu Tinh",
+            "successRate": 25,
+            "reward": { "min": 70, "max": 100 },
+            "levelRequired": 5,
+            "emoji": "🐻",
+            "loot": "linh_hon_gau_tinh"
+        }
+    },
+    "dungeon_tiers": {
+        "nhan_gioi": {
+            "name": "Nhân Giới",
+            "cooldown": 5,
+            "successRate": 70,
+            "requirements": [],
+            "rewards": {
+                "eggs_low": 15,
+                "monster_souls_low": 20,
+                "v_coin": { "min": 50, "max": 150 },
+                "ngoc_linh": { "min": 5, "max": 10 },
+                "equipment": 5
+            },
+            "emoji": "🌿"
+        },
+        "thien_gioi": {
+            "name": "Thiên Giới",
+            "cooldown": 15,
+            "successRate": 50,
+            "requirements": ["bua_ho_menh"],
+            "rewards": {
+                "eggs_medium": 25,
+                "monster_souls_medium": 30,
+                "v_coin": { "min": 200, "max": 500 },
+                "ngoc_linh": { "min": 20, "max": 50 },
+                "equipment": 15,
+                "buff_items": 10
+            },
+            "emoji": "⚡"
+        },
+        "ma_gioi": {
+            "name": "Ma Giới",
+            "cooldown": 30,
+            "successRate": 30,
+            "requirements": ["linh_dan_cao_cap", "level_5"],
+            "rewards": {
+                "eggs_high": 35,
+                "monster_souls_high": 40,
+                "v_coin": { "min": 500, "max": 1500 },
+                "ngoc_linh": { "min": 50, "max": 200 },
+                "equipment_rare": 25,
+                "buff_items_rare": 20,
+                "mystery_chest": 5,
+                "dep_to_ong": 0.0001
+            },
+            "emoji": "🔥"
+        }
+    },
+    "special_events": {
+        "ruong_kho_bau": {
+            "name": "Rương Kho Báu",
+            "rate": 2,
+            "reward": { "min": 500, "max": 1000 },
+            "emoji": "💎"
+        },
+        "rac": {
+            "name": "Rác",
+            "rate": 5,
+            "reward": { "min": 0, "max": 0 },
+            "emoji": "🗑️"
+        }
+    },
+    "xp_rewards": {
+        "work": 10,
+        "daily": 25,
+        "weekly": 50,
+        "hunt": 15,
+        "fish": 12,
+        "farm_harvest": 20
+    },
+    "cooldowns": {
+        "work": 60,
+        "hunt": 2,
+        "fish": 5,
+        "weekly": 10080
+    },
+    "weapon_bonuses": {
+        "kiem_go": 0,
+        "kiem_sat": 10,
+        "kiem_bac": 20,
+        "kiem_vang": 30,
+        "kiem_than": 50,
+        "dep_to_ong": 99
+    },
+    "fishing_gear_bonuses": {
+        "can_cau_tre": 5,
+        "can_cau_sat": 10,
+        "moi_cau": 15
+    },
+    "hatchery_upgrade_costs": {
+        "1": 0,
+        "2": 1000,
+        "3": 5000,
+        "4": 20000,
+        "5": 100000
+    }
+}

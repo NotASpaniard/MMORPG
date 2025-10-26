@@ -1,0 +1,36 @@
+{
+    "name": "vie-mmorpg-bot",
+    "version": "1.0.0",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "prestart": "node -e \"const fs=require('fs');const f='.bot.lock';if(fs.existsSync(f))fs.unlinkSync(f)\"",
+        "dev": "powershell -ExecutionPolicy Bypass -File scripts/dev-with-register.ps1",
+        "dev-skip": "powershell -ExecutionPolicy Bypass -File scripts/dev-with-register.ps1 -SkipRegister",
+        "start": "node dist/index.js",
+        "build": "tsc -p tsconfig.json",
+        "render-postbuild": "npm run build",
+        "register": "tsx tools/registerSlashGuild.ts",
+        "register-multiple": "tsx tools/registerMultipleGuilds.ts",
+        "register-all": "tsx tools/registerAllSlash.ts",
+        "clear": "tsx tools/clearCommands.ts",
+        "control": "powershell -ExecutionPolicy Bypass -File scripts/bot-control.ps1",
+        "bot:start": "powershell -ExecutionPolicy Bypass -File scripts/bot-control.ps1 -Action start",
+        "bot:stop": "powershell -ExecutionPolicy Bypass -File scripts/bot-control.ps1 -Action stop",
+        "bot:status": "powershell -ExecutionPolicy Bypass -File scripts/bot-control.ps1 -Action status"
+    },
+    "dependencies": {
+        "discord.js": "^14.22.1",
+        "dotenv": "^17.2.3",
+        "zod": "^4.1.11"
+    },
+    "devDependencies": {
+        "@types/node": "^24.6.1",
+        "tsx": "^4.20.6",
+        "typescript": "^5.9.3"
+    },
+    "engines": {
+        "node": ">=18.17",
+        "npm": ">=8.0.0"
+    }
+}
