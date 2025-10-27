@@ -119,13 +119,15 @@ export const slashBlackjack: SlashCommand = {
         .setRequired(true)
         .setMinValue(1)),
   async execute(interaction) {
+    await interaction.deferReply();
+    
     try {
       const amount = interaction.options.getInteger('amount', true);
       const store = getStore();
       const user = store.getUser(interaction.user.id);
       
       if (user.balance < amount) {
-        await interaction.reply({ content: 'Không đủ V để chơi.', ephemeral: true });
+        await interaction.editReply({ content: 'Không đủ V để chơi.' });
         return;
       }
       
@@ -159,7 +161,7 @@ export const slashBlackjack: SlashCommand = {
       const embed = createBlackjackEmbed(gameId);
       const buttons = createBlackjackButtons(gameId, 'playing');
       
-      await interaction.reply({ embeds: [embed], components: [buttons] });
+      await interaction.editReply({ embeds: [embed], components: [buttons] });
       
       // Set timeout để auto-stand sau 30 giây
       setTimeout(() => {
@@ -172,8 +174,10 @@ export const slashBlackjack: SlashCommand = {
       
     } catch (error) {
       console.error('Error in slashBlackjack:', error);
-      if (!interaction.replied && !interaction.deferred) {
-        await interaction.reply({ content: 'Có lỗi xảy ra khi chơi Blackjack.', ephemeral: true });
+      try {
+        await interaction.editReply({ content: 'Có lỗi xảy ra khi chơi Blackjack.' });
+      } catch (e) {
+        // Ignore edit errors
       }
     }
   }
@@ -270,6 +274,8 @@ export const slashBaucua: SlashCommand = {
         .setRequired(true)
         .setMinValue(1)),
   async execute(interaction) {
+    await interaction.deferReply();
+    
     try {
       const choice = interaction.options.getString('choice', true);
       const amount = interaction.options.getInteger('amount', true);
@@ -277,7 +283,7 @@ export const slashBaucua: SlashCommand = {
       const user = store.getUser(interaction.user.id);
       
       if (user.balance < amount) {
-        await interaction.reply({ content: 'Không đủ V để chơi.', ephemeral: true });
+        await interaction.editReply({ content: 'Không đủ V để chơi.' });
         return;
       }
       
@@ -342,11 +348,13 @@ export const slashBaucua: SlashCommand = {
         .setFooter({ text: profit > 0 ? '🎉 Chúc mừng bạn thắng!' : profit < 0 ? '😢 Chúc may mắn lần sau!' : '🤝 Hòa vốn!' })
         .setTimestamp();
       
-      await interaction.reply({ embeds: [embed] });
+      await interaction.editReply({ embeds: [embed] });
     } catch (error) {
       console.error('Error in slashBaucua:', error);
-      if (!interaction.replied && !interaction.deferred) {
-        await interaction.reply({ content: 'Có lỗi xảy ra khi chơi Bầu Cua.', ephemeral: true });
+      try {
+        await interaction.editReply({ content: 'Có lỗi xảy ra khi chơi Bầu Cua.' });
+      } catch (e) {
+        // Ignore edit errors
       }
     }
   }
@@ -372,6 +380,8 @@ export const slashXocdia: SlashCommand = {
         .setRequired(true)
         .setMinValue(1)),
   async execute(interaction) {
+    await interaction.deferReply();
+    
     try {
       const choice = interaction.options.getString('choice', true);
       const amount = interaction.options.getInteger('amount', true);
@@ -379,7 +389,7 @@ export const slashXocdia: SlashCommand = {
       const user = store.getUser(interaction.user.id);
       
       if (user.balance < amount) {
-        await interaction.reply({ content: 'Không đủ V để chơi.', ephemeral: true });
+        await interaction.editReply({ content: 'Không đủ V để chơi.' });
         return;
       }
       
@@ -444,11 +454,13 @@ export const slashXocdia: SlashCommand = {
         .setFooter({ text: isWin ? '🎉 Chúc mừng bạn thắng!' : '😢 Chúc may mắn lần sau!' })
         .setTimestamp();
       
-      await interaction.reply({ embeds: [embed] });
+      await interaction.editReply({ embeds: [embed] });
     } catch (error) {
       console.error('Error in slashXocdia:', error);
-      if (!interaction.replied && !interaction.deferred) {
-        await interaction.reply({ content: 'Có lỗi xảy ra khi chơi Xóc Đĩa.', ephemeral: true });
+      try {
+        await interaction.editReply({ content: 'Có lỗi xảy ra khi chơi Xóc Đĩa.' });
+      } catch (e) {
+        // Ignore edit errors
       }
     }
   }

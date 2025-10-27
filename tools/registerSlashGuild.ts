@@ -25,7 +25,7 @@ async function registerToGuild(rest: REST, commands: any[], guildId: string, cli
         Routes.applicationGuildCommands(clientId, guildId),
         { body: commands }
       ),
-      10000 // 10 second timeout
+      30000 // 30 second timeout
     );
     
     console.log(`✅ Successfully registered ${commands.length} commands to guild!`);

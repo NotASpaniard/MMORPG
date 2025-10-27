@@ -2,7 +2,7 @@
   "users": {
     "1180992570009067543": {
       "userId": "1180992570009067543",
-      "balance": 9872582,
+      "balance": 9870125,
       "daily": {
         "last": null,
         "streak": 0
@@ -144,6 +144,18 @@
           "plantedAt": null,
           "harvestAt": null
         }
+      },
+      "pitySystem": {
+        "hunt": {
+          "consecutiveFails": 0,
+          "consecutiveWins": 0,
+          "lastResult": null
+        },
+        "dungeon": {
+          "consecutiveFails": 0,
+          "consecutiveWins": 0,
+          "lastResult": null
+        }
       }
     },
     "527330228012449792": {
@@ -205,6 +217,92 @@
           "type": null,
           "plantedAt": null,
           "harvestAt": null
+        }
+      },
+      "pitySystem": {
+        "hunt": {
+          "consecutiveFails": 0,
+          "consecutiveWins": 0,
+          "lastResult": null
+        },
+        "dungeon": {
+          "consecutiveFails": 0,
+          "consecutiveWins": 0,
+          "lastResult": null
+        }
+      }
+    },
+    "299062412932415490": {
+      "userId": "299062412932415490",
+      "balance": 0,
+      "daily": {
+        "last": null,
+        "streak": 0
+      },
+      "lastDaily": "",
+      "dailyStreak": 0,
+      "inventory": {},
+      "quests": [
+        {
+          "desc": "Gửi 1 ảnh",
+          "reward": 100,
+          "done": false
+        },
+        {
+          "desc": "Đề cập 3 người",
+          "reward": 120,
+          "done": false
+        },
+        {
+          "desc": "Dùng lệnh bất kỳ 5 lần",
+          "reward": 150,
+          "done": false
+        }
+      ],
+      "xp": 0,
+      "level": 1,
+      "cooldowns": {
+        "work": null,
+        "hunt": null,
+        "fish": null,
+        "daily": null,
+        "weekly": null,
+        "dungeon_nhan": null,
+        "dungeon_thien": null,
+        "dungeon_ma": null
+      },
+      "categorizedInventory": {
+        "eggs": {},
+        "pets": {},
+        "weapons": {},
+        "monsterItems": {},
+        "dungeonGear": {},
+        "dungeonLoot": {},
+        "misc": {}
+      },
+      "equippedItems": {
+        "weapon": null,
+        "phuChu": null,
+        "linhDan": null
+      },
+      "hatchery": {
+        "level": 1,
+        "plantedEgg": {
+          "type": null,
+          "plantedAt": null,
+          "harvestAt": null
+        }
+      },
+      "pitySystem": {
+        "hunt": {
+          "consecutiveFails": 0,
+          "consecutiveWins": 0,
+          "lastResult": null
+        },
+        "dungeon": {
+          "consecutiveFails": 0,
+          "consecutiveWins": 0,
+          "lastResult": null
         }
       }
     }
