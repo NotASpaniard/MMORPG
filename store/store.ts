@@ -51,6 +51,19 @@ type UserProfile = {
     soulsCollected: number;
     ngocLinhCollected: number;
   };
+  // Pity system và streak tracking
+  pitySystem: {
+    hunt: {
+      consecutiveFails: number;
+      consecutiveWins: number;
+      lastResult: 'win' | 'lose' | null;
+    };
+    dungeon: {
+      consecutiveFails: number;
+      consecutiveWins: number;
+      lastResult: 'win' | 'lose' | null;
+    };
+  };
 };
 
 type DB = {
@@ -154,6 +167,18 @@ export class Store {
             plantedAt: null,
             harvestAt: null
           }
+        },
+        pitySystem: {
+          hunt: {
+            consecutiveFails: 0,
+            consecutiveWins: 0,
+            lastResult: null
+          },
+          dungeon: {
+            consecutiveFails: 0,
+            consecutiveWins: 0,
+            lastResult: null
+          }
         }
       };
       this.save();
@@ -226,6 +251,23 @@ export class Store {
           type: null,
           plantedAt: null,
           harvestAt: null
+        }
+      };
+      needsSave = true;
+    }
+    
+    // Ensure pitySystem exists
+    if (!user.pitySystem) {
+      user.pitySystem = {
+        hunt: {
+          consecutiveFails: 0,
+          consecutiveWins: 0,
+          lastResult: null
+        },
+        dungeon: {
+          consecutiveFails: 0,
+          consecutiveWins: 0,
+          lastResult: null
         }
       };
       needsSave = true;
@@ -708,6 +750,72 @@ export class Store {
     };
   }
 
+  // ====== PITY SYSTEM & SUCCESS RATE CALCULATION ======
+  
+  calculateSuccessRate(userId: string, baseRate: number, type: 'hunt' | 'dungeon', weaponBonus: number = 0): { 
+    finalRate: number; 
+    pityBonus: number; 
+    streakPenalty: number; 
+    levelBonus: number; 
+    guildBonus: number;
+    breakdown: string;
+  } {
+    const user = this.getUser(userId);
+    const pityData = user.pitySystem[type];
+    
+    // Level bonus: min(level * 2, 20)
+    const levelBonus = Math.min(user.level * 2, 20);
+    
+    // Guild bonus
+    const userGuild = this.getUserGuild(userId);
+    let guildBonus = 0;
+    if (userGuild) {
+      const buffs = this.getGuildRankBuffs(userGuild.guildRank.level);
+      guildBonus = buffs.incomeBonus; // Sử dụng incomeBonus cho success rate
+    }
+    
+    // Pity bonus: (consecutive_fails * 5%) capped at 25%
+    const pityBonus = Math.min(pityData.consecutiveFails * 5, 25);
+    
+    // Streak penalty: (consecutive_wins * -3%) capped at -15%
+    const streakPenalty = Math.max(pityData.consecutiveWins * -3, -15);
+    
+    // Final calculation
+    const finalRate = Math.min(
+      baseRate + weaponBonus + levelBonus + guildBonus + pityBonus + streakPenalty,
+      85 // Hard cap tránh 100%
+    );
+    
+    const breakdown = `Cơ bản: ${baseRate}% + Vũ khí: ${weaponBonus}% + Level: ${levelBonus}% + Guild: ${guildBonus}% + Pity: ${pityBonus}% + Streak: ${streakPenalty}% = ${finalRate}%`;
+    
+    return {
+      finalRate: Math.max(0, finalRate), // Đảm bảo không âm
+      pityBonus,
+      streakPenalty,
+      levelBonus,
+      guildBonus,
+      breakdown
+    };
+  }
+  
+  updatePitySystem(userId: string, type: 'hunt' | 'dungeon', result: 'win' | 'lose'): void {
+    const user = this.getUser(userId);
+    const pityData = user.pitySystem[type];
+    
+    if (result === 'win') {
+      // Reset consecutive fails, increment wins
+      pityData.consecutiveFails = 0;
+      pityData.consecutiveWins += 1;
+    } else {
+      // Reset consecutive wins, increment fails
+      pityData.consecutiveWins = 0;
+      pityData.consecutiveFails += 1;
+    }
+    
+    pityData.lastResult = result;
+    this.save();
+  }
+
 
   // ====== DUNGEON SYSTEM ======
   enterDungeon(userId: string, tier: string): { success: boolean; message: string; rewards?: string } {
@@ -734,8 +842,13 @@ export class Store {
       this.removeItemFromInventory(userId, 'dungeonGear', 'linh_dan_cao_cap', 1);
     }
     
-    // Thực hiện ải (5 tầng)
-    const success = Math.random() * 100 < tierConfig.successRate;
+    // Thực hiện ải (5 tầng) với pity system
+    const successRateData = this.calculateSuccessRate(userId, tierConfig.successRate, 'dungeon');
+    const finalSuccessRate = successRateData.finalRate;
+    const success = Math.random() * 100 < finalSuccessRate;
+    
+    // Update pity system
+    this.updatePitySystem(userId, 'dungeon', success ? 'win' : 'lose');
     
     if (!success) {
       return { success: true, message: `Thất bại ở tầng ${Math.floor(Math.random() * 5) + 1}. Hãy thử lại sau!` };

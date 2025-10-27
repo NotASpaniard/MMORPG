@@ -4,6 +4,15 @@ import { getStore } from '../store/store.js';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
+// Helper function để tạo progress bar
+function createProgressBar(current: number, max: number, emoji: string): string {
+  const percentage = Math.min(100, Math.max(0, Math.floor((current / max) * 100)));
+  const filled = Math.floor(percentage / 10);
+  const empty = 10 - filled;
+  const bar = '█'.repeat(filled) + '░'.repeat(empty);
+  return `${emoji} [${bar}] ${percentage}% (${current}/${max})`;
+}
+
 // v hunt - Săn quái 1 lần
 
 // /hunt - Slash command handler
@@ -33,20 +42,18 @@ export const slashHunt: SlashCommand = {
         return;
       }
       
-      // Tính tỷ lệ thành công với weapon bonus
-      let baseSuccessRate = 0;
-      let monsterName = '';
-      let monsterEmoji = '';
-      let monsterReward = { min: 0, max: 0 };
-      let monsterLoot = '';
-      
       // Chọn monster ngẫu nhiên
       const [monsterId, monsterConfig] = availableMonsters[Math.floor(Math.random() * availableMonsters.length)];
-      monsterName = (monsterConfig as any).name;
-      monsterEmoji = (monsterConfig as any).emoji;
-      monsterReward = (monsterConfig as any).reward;
-      monsterLoot = (monsterConfig as any).loot;
-      baseSuccessRate = (monsterConfig as any).successRate;
+      const monsterName = (monsterConfig as any).name;
+      const monsterEmoji = (monsterConfig as any).emoji;
+      const monsterReward = (monsterConfig as any).reward;
+      const monsterLoot = (monsterConfig as any).loot;
+      const monsterDescription = (monsterConfig as any).description;
+      const monsterLore = (monsterConfig as any).lore;
+      const monsterDifficulty = (monsterConfig as any).difficulty;
+      const monsterHealth = (monsterConfig as any).health;
+      const monsterDamage = (monsterConfig as any).damage;
+      const baseSuccessRate = (monsterConfig as any).successRate;
       
       // Weapon bonus
       let weaponBonus = 0;
@@ -58,8 +65,13 @@ export const slashHunt: SlashCommand = {
         }
       }
       
-      const finalSuccessRate = Math.min(95, baseSuccessRate + weaponBonus);
+      // Tính success rate với pity system
+      const successRateData = store.calculateSuccessRate(interaction.user.id, baseSuccessRate, 'hunt', weaponBonus);
+      const finalSuccessRate = successRateData.finalRate;
       const isSuccess = Math.random() * 100 < finalSuccessRate;
+      
+      // Update pity system
+      store.updatePitySystem(interaction.user.id, 'hunt', isSuccess ? 'win' : 'lose');
       
       if (isSuccess) {
         // Thành công
@@ -77,18 +89,29 @@ export const slashHunt: SlashCommand = {
         store.addXP(interaction.user.id, 5);
         store.save();
         
+        // Tạo progress bar cho damage
+        const damageDealt = Math.floor(monsterHealth * (0.6 + Math.random() * 0.4)); // 60-100% damage
+        const healthBar = createProgressBar(damageDealt, monsterHealth, '❤️');
+        
         const embed = new EmbedBuilder()
-          .setTitle('⚔️ Săn quái thành công!')
+          .setTitle('⚔️ Săn Quái Thành Công!')
           .setColor('#4fc3f7')
+          .setDescription(`**${monsterEmoji} ${monsterName}** - ${monsterDescription}`)
           .addFields(
-            { name: 'Quái vật', value: `${monsterEmoji} ${monsterName}`, inline: true },
-            { name: 'Phần thưởng', value: `${finalReward} V`, inline: true },
-            { name: 'Loot', value: `${monsterLoot}`, inline: true }
+            { name: '📊 Thông Tin Quái Vật', value: `**Máu:** ${healthBar}\n**Sát thương:** ${monsterDamage}\n**Độ khó:** ${monsterDifficulty}`, inline: true },
+            { name: '💰 Phần Thưởng', value: `**V:** ${finalReward.toLocaleString()}\n**Loot:** ${monsterLoot}\n**XP:** +5`, inline: true },
+            { name: '🎯 Thống Kê', value: `**Tỷ lệ thành công:** ${finalSuccessRate.toFixed(1)}%\n**Vũ khí:** ${user.equippedItems.weapon || 'Không có'}\n**Level:** ${user.level}`, inline: true }
           )
+          .addFields({ name: '📖 Lore', value: monsterLore, inline: false })
           .setTimestamp();
         
         if (user.equippedItems.weapon === 'dep_to_ong') {
-          embed.addFields({ name: '🏆 Dép Tổ Ong Bonus', value: '+50% V reward', inline: false });
+          embed.addFields({ name: '🏆 Dép Tổ Ong Bonus', value: '+50% V reward - Thần khí siêu hiếm!', inline: false });
+        }
+        
+        // Thêm breakdown chi tiết nếu có pity bonus
+        if (successRateData.pityBonus > 0) {
+          embed.addFields({ name: '🎲 Pity System', value: `+${successRateData.pityBonus}% từ ${store.getUser(interaction.user.id).pitySystem.hunt.consecutiveFails} lần thất bại liên tiếp`, inline: false });
         }
         
         await interaction.reply({ embeds: [embed] });
@@ -97,15 +120,24 @@ export const slashHunt: SlashCommand = {
         store.setCooldown(interaction.user.id, 'hunt', 2);
         store.save();
         
+        // Tạo progress bar cho damage thất bại
+        const damageDealt = Math.floor(monsterHealth * (0.1 + Math.random() * 0.3)); // 10-40% damage
+        const healthBar = createProgressBar(damageDealt, monsterHealth, '❤️');
+        
         const embed = new EmbedBuilder()
-          .setTitle('💀 Săn quái thất bại!')
+          .setTitle('💀 Săn Quái Thất Bại!')
           .setColor('#f44336')
+          .setDescription(`**${monsterEmoji} ${monsterName}** - ${monsterDescription}`)
           .addFields(
-            { name: 'Quái vật', value: `${monsterEmoji} ${monsterName}`, inline: true },
-            { name: 'Kết quả', value: 'Quái vật đã trốn thoát!', inline: true },
-            { name: 'Tỷ lệ thành công', value: `${finalSuccessRate}%`, inline: true }
+            { name: '📊 Thông Tin Quái Vật', value: `**Máu:** ${healthBar}\n**Sát thương:** ${monsterDamage}\n**Độ khó:** ${monsterDifficulty}`, inline: true },
+            { name: '❌ Kết Quả', value: 'Quái vật đã trốn thoát!\nBạn cần luyện tập thêm...', inline: true },
+            { name: '🎯 Thống Kê', value: `**Tỷ lệ thành công:** ${finalSuccessRate.toFixed(1)}%\n**Vũ khí:** ${user.equippedItems.weapon || 'Không có'}\n**Level:** ${user.level}`, inline: true }
           )
+          .addFields({ name: '📖 Lore', value: monsterLore, inline: false })
           .setTimestamp();
+        
+        // Thêm breakdown chi tiết
+        embed.addFields({ name: '🔍 Phân Tích', value: successRateData.breakdown, inline: false });
         
         await interaction.reply({ embeds: [embed] });
       }

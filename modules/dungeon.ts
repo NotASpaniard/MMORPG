@@ -23,17 +23,17 @@ export const slashDungeon: SlashCommand = {
       .addFields(
         {
           name: '🌿 Nhân Giới (Normal)',
-          value: `Cooldown: 5 phút\nYêu cầu: Không\nĐộ khó: Thấp (70%)\nPhần thưởng: Trứng thấp, Linh hồn thấp, V 50-150`,
+          value: `**Cooldown:** 5 phút\n**Yêu cầu:** Không\n**Độ khó:** Thấp (50%)\n**Phần thưởng:** Trứng thấp, Linh hồn thấp, V 50-150\n**Lore:** Cõi của con người, nơi bắt đầu hành trình`,
           inline: true
         },
         {
           name: '⚡ Thiên Giới (Challenge)',
-          value: `Cooldown: 15 phút\nYêu cầu: 1 Bùa Hộ Mệnh\nĐộ khó: Trung bình (50%)\nPhần thưởng: Trứng trung, Linh hồn trung, V 200-500`,
+          value: `**Cooldown:** 15 phút\n**Yêu cầu:** 1 Bùa Hộ Mệnh\n**Độ khó:** Trung bình (30%)\n**Phần thưởng:** Trứng trung, Linh hồn trung, V 200-500\n**Lore:** Cõi của các vị thần, đầy thử thách`,
           inline: true
         },
         {
           name: '🔥 Ma Giới (Insane)',
-          value: `Cooldown: 30 phút\nYêu cầu: 1 Linh Đan Cấp Cao + Level 5+\nĐộ khó: Cao (30%)\nPhần thưởng: Trứng cao, Linh hồn cao, V 500-1500`,
+          value: `**Cooldown:** 30 phút\n**Yêu cầu:** 1 Linh Đan Cấp Cao + Level 5+\n**Độ khó:** Cao (15%)\n**Phần thưởng:** Trứng cao, Linh hồn cao, V 500-1500\n**Lore:** Cõi của ma quỷ, nguy hiểm tột cùng`,
           inline: true
         }
       )

@@ -1,10 +1,100 @@
 import 'dotenv/config';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, Collection, GatewayIntentBits, Partials, EmbedBuilder } from 'discord.js';
 import { loadCommands } from './lib/loader.js';
 import { getEnv } from './lib/env.js';
 import { getStore } from './store/store.js';
 import { existsSync, writeFileSync, unlinkSync, readFileSync } from 'node:fs';
 import path from 'node:path';
+import { finishBlackjackGame, blackjackGames } from './modules/entertainment.js';
+
+// Helper functions for Blackjack (copied from entertainment.ts)
+function calculateHandValue(cards: number[]): number {
+  let value = 0;
+  let aces = 0;
+  
+  for (const card of cards) {
+    if (card === 1) {
+      aces++;
+      value += 11;
+    } else {
+      value += Math.min(card, 10);
+    }
+  }
+  
+  // Adjust for aces
+  while (value > 21 && aces > 0) {
+    value -= 10;
+    aces--;
+  }
+  
+  return value;
+}
+
+function createBlackjackEmbed(gameId: string, showDealerCard: boolean = false): EmbedBuilder {
+  const game = blackjackGames.get(gameId);
+  if (!game) throw new Error('Game not found');
+  
+  const cardSymbols: { [key: number]: string } = {
+    1: 'A', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10',
+    11: 'J', 12: 'Q', 13: 'K'
+  };
+  const suitSymbols = ['♠️', '♥️', '♦️', '♣️'];
+  
+  function getCardSymbol(card: number): string {
+    const suit = suitSymbols[Math.floor(Math.random() * 4)];
+    return `${cardSymbols[card]}${suit}`;
+  }
+  
+  const playerCardsText = game.playerCards.map(getCardSymbol).join(' ');
+  const dealerCardsText = showDealerCard 
+    ? game.dealerCards.map(getCardSymbol).join(' ')
+    : `${getCardSymbol(game.dealerCards[0])} ❓`;
+  
+  const embed = new EmbedBuilder()
+    .setTitle('🃏 Blackjack')
+    .setColor('#1a237e')
+    .addFields(
+      { name: '👤 Bạn', value: `${playerCardsText}\n**Tổng:** ${game.playerValue}`, inline: true },
+      { name: '🏦 Dealer', value: `${dealerCardsText}\n**Tổng:** ${showDealerCard ? game.dealerValue : '?'}`, inline: true },
+      { name: '💰 Cược', value: `${game.betAmount} V`, inline: true }
+    );
+  
+  if (game.gameState === 'playing') {
+    embed.setDescription('Chọn hành động của bạn:');
+  } else if (game.gameState === 'bust') {
+    embed.setDescription('💀 **BUST!** Bạn đã vượt quá 21!');
+    embed.setColor('#f44336');
+  } else if (game.gameState === 'stand') {
+    embed.setDescription('⏳ Đang chờ dealer...');
+  } else if (game.gameState === 'finished') {
+    embed.setDescription('🎮 Ván chơi kết thúc!');
+  }
+  
+  return embed;
+}
+
+function createBlackjackButtons(gameId: string, gameState: string): ActionRowBuilder<ButtonBuilder> {
+  const row = new ActionRowBuilder<ButtonBuilder>();
+  
+  if (gameState === 'playing') {
+    row.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`bj_hit:${gameId}`)
+        .setLabel('🎴 Hit')
+        .setStyle(ButtonStyle.Primary),
+      new ButtonBuilder()
+        .setCustomId(`bj_stand:${gameId}`)
+        .setLabel('✋ Stand')
+        .setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder()
+        .setCustomId(`bj_double:${gameId}`)
+        .setLabel('💰 Double Down')
+        .setStyle(ButtonStyle.Success)
+    );
+  }
+  
+  return row;
+}
 
 const LOCK_FILE = path.join(process.cwd(), '.bot.lock');
 
@@ -96,6 +186,69 @@ async function main(): Promise<void> {
     if (interaction.isButton()) {
       const store = getStore();
       const [action, userId, amountStr] = interaction.customId.split(':');
+      
+      // Blackjack buttons
+      if (action === 'bj_hit' || action === 'bj_stand' || action === 'bj_double') {
+        const gameId = `${userId}_${interaction.customId.split('_')[1]}`;
+        const game = blackjackGames.get(gameId);
+        
+        if (!game || game.userId !== interaction.user.id) {
+          await interaction.reply({ content: 'Game không tồn tại hoặc không phải của bạn.', ephemeral: true });
+          return;
+        }
+        
+        if (game.gameState !== 'playing') {
+          await interaction.reply({ content: 'Game đã kết thúc.', ephemeral: true });
+          return;
+        }
+        
+        if (action === 'bj_hit') {
+          // Hit: thêm 1 lá bài
+          const newCard = Math.floor(Math.random() * 13) + 1;
+          game.playerCards.push(newCard);
+          game.playerValue = calculateHandValue(game.playerCards);
+          
+          if (game.playerValue > 21) {
+            game.gameState = 'bust';
+            await finishBlackjackGame(gameId, interaction);
+            return;
+          }
+          
+          // Update embed
+          const embed = createBlackjackEmbed(gameId);
+          const buttons = createBlackjackButtons(gameId, 'playing');
+          await interaction.update({ embeds: [embed], components: [buttons] });
+          
+        } else if (action === 'bj_stand') {
+          // Stand: kết thúc turn của player
+          game.gameState = 'stand';
+          await finishBlackjackGame(gameId, interaction);
+          return;
+          
+        } else if (action === 'bj_double') {
+          // Double Down: tăng gấp đôi cược và chỉ được rút 1 lá
+          const user = store.getUser(interaction.user.id);
+          if (user.balance < game.betAmount) {
+            await interaction.reply({ content: 'Không đủ V để double down.', ephemeral: true });
+            return;
+          }
+          
+          user.balance -= game.betAmount;
+          game.betAmount *= 2;
+          store.save();
+          
+          // Rút 1 lá bài cuối cùng
+          const newCard = Math.floor(Math.random() * 13) + 1;
+          game.playerCards.push(newCard);
+          game.playerValue = calculateHandValue(game.playerCards);
+          
+          game.gameState = 'stand';
+          await finishBlackjackGame(gameId, interaction);
+          return;
+        }
+        return;
+      }
+      
       if (action === 'quest_refresh') {
         // Nút trung gian: hiển thị nút xác nhận
         if (interaction.user.id !== userId) {

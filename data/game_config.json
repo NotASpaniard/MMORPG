@@ -1,96 +1,151 @@
 {
     "eggs": {
         "rong_xanh": {
-            "name": "Trứng Rồng Xanh",
+            "name": "Azure Dragon Embryo",
             "growTime": 5,
             "baseReward": 50,
             "levelRequired": 1,
-            "emoji": "🐉"
+            "emoji": "🐉",
+            "description": "Thủ hộ phương Đông, chúa tể mưa gió",
+            "lore": "Rồng Xanh - Thủ hộ phương Đông, chúa tể của mưa gió và sấm sét. Sinh vật hùng mạnh nhất trong tứ linh, có khả năng điều khiển thời tiết và mang lại mưa thuận gió hòa.",
+            "rarity": "Common",
+            "temperature": "25°C",
+            "humidity": "60%"
         },
         "phuong_hoang": {
-            "name": "Trứng Phượng Hoàng",
+            "name": "Phoenix Rebirth",
             "growTime": 30,
             "baseReward": 80,
             "levelRequired": 2,
-            "emoji": "🦅"
+            "emoji": "🦅",
+            "description": "Nữ vương của lửa, tái sinh từ tro tàn",
+            "lore": "Phượng Hoàng - Nữ vương của lửa, có khả năng tái sinh từ tro tàn. Sinh vật bất tử, biểu tượng của sự tái sinh và hy vọng. Mỗi lần chết, chúng lại hồi sinh mạnh mẽ hơn.",
+            "rarity": "Uncommon",
+            "temperature": "35°C",
+            "humidity": "40%"
         },
         "ky_lan": {
-            "name": "Trứng Kỳ Lân",
+            "name": "Qilin Blessing",
             "growTime": 60,
             "baseReward": 120,
             "levelRequired": 3,
-            "emoji": "🦄"
+            "emoji": "🦄",
+            "description": "Linh thú cát tường, mang đến may mắn",
+            "lore": "Kỳ Lân - Linh thú cát tường, mang đến may mắn và thịnh vượng. Chỉ xuất hiện khi có vị vua nhân từ trị vì. Sinh vật hiền lành nhưng có sức mạnh thần thánh.",
+            "rarity": "Rare",
+            "temperature": "20°C",
+            "humidity": "70%"
         },
         "bach_ho": {
-            "name": "Trứng Bạch Hổ",
+            "name": "White Tiger Warlord",
             "growTime": 120,
             "baseReward": 200,
             "levelRequired": 4,
-            "emoji": "🐯"
+            "emoji": "🐯",
+            "description": "Chiến thần phương Tây, sức mạnh tuyệt đối",
+            "lore": "Bạch Hổ - Chiến thần phương Tây, chúa tể của chiến tranh và sức mạnh. Sinh vật hung dữ nhất trong tứ linh, có khả năng xé nát mọi kẻ thù với móng vuốt sắc bén.",
+            "rarity": "Epic",
+            "temperature": "15°C",
+            "humidity": "50%"
         },
         "huyen_vu": {
-            "name": "Trứng Huyền Vũ",
+            "name": "Black Tortoise Immortal",
             "growTime": 300,
             "baseReward": 300,
             "levelRequired": 5,
-            "emoji": "🐢"
+            "emoji": "🐢",
+            "description": "Kết hợp rắn và rùa, trường thọ bất tử",
+            "lore": "Huyền Vũ - Kết hợp giữa rắn và rùa, biểu tượng của trường thọ và sự bất tử. Sinh vật thông thái nhất, có khả năng dự đoán tương lai và bảo vệ khỏi tà ma.",
+            "rarity": "Legendary",
+            "temperature": "10°C",
+            "humidity": "80%"
         }
     },
     "monsters": {
         "yeu_tinh": {
             "name": "Yêu Tinh",
-            "successRate": 80,
+            "successRate": 45,
             "reward": { "min": 20, "max": 100 },
             "levelRequired": 1,
             "emoji": "👻",
-            "loot": "linh_hon_yeu_tinh"
+            "loot": "linh_hon_yeu_tinh",
+            "description": "Linh hồn oan khuất, ẩn nấp trong bóng tối",
+            "lore": "Những linh hồn không siêu thoát, lang thang trong đêm tối tìm kiếm sự báo thù. Chúng yếu ớt nhưng nhanh nhẹn, khó nắm bắt.",
+            "difficulty": "Dễ",
+            "health": 50,
+            "damage": 15
         },
         "tinh_ho_ly": {
             "name": "Tinh Hồ Ly",
-            "successRate": 75,
+            "successRate": 40,
             "reward": { "min": 30, "max": 100 },
             "levelRequired": 1,
             "emoji": "🦊",
-            "loot": "linh_hon_ho_ly"
+            "loot": "linh_hon_ho_ly",
+            "description": "Hồ ly tinh quyến rũ, sở hữu phép thuật mê hoặc",
+            "lore": "Hồ ly tinh với đuôi lửa, có khả năng biến hóa và mê hoặc con người. Chúng thông minh và xảo quyệt, không dễ bị đánh lừa.",
+            "difficulty": "Dễ",
+            "health": 60,
+            "damage": 20
         },
         "ma_rung": {
             "name": "Ma Rừng",
-            "successRate": 60,
+            "successRate": 30,
             "reward": { "min": 40, "max": 100 },
             "levelRequired": 2,
             "emoji": "👹",
-            "loot": "linh_hon_ma_rung"
+            "loot": "linh_hon_ma_rung",
+            "description": "Quỷ rừng hung dữ, chúa tể của rừng sâu",
+            "lore": "Sinh vật hùng mạnh sống trong rừng sâu, có sức mạnh thể chất vượt trội. Chúng bảo vệ lãnh thổ một cách hung bạo.",
+            "difficulty": "Trung bình",
+            "health": 80,
+            "damage": 30
         },
         "linh_duong": {
             "name": "Linh Dương",
-            "successRate": 50,
+            "successRate": 25,
             "reward": { "min": 50, "max": 100 },
             "levelRequired": 3,
             "emoji": "🦌",
-            "loot": "linh_hon_linh_duong"
+            "loot": "linh_hon_linh_duong",
+            "description": "Linh dương thần thánh, nhanh như chớp",
+            "lore": "Sinh vật linh thiêng với tốc độ kinh hoàng và giác quan nhạy bén. Chúng có thể cảm nhận được nguy hiểm từ rất xa.",
+            "difficulty": "Trung bình",
+            "health": 70,
+            "damage": 25
         },
         "ho_than": {
             "name": "Hổ Thần",
-            "successRate": 30,
+            "successRate": 15,
             "reward": { "min": 60, "max": 100 },
             "levelRequired": 4,
             "emoji": "🐅",
-            "loot": "linh_hon_ho_than"
+            "loot": "linh_hon_ho_than",
+            "description": "Hổ thần hùng mạnh, chúa tể của muông thú",
+            "lore": "Hổ thần với sức mạnh tuyệt đối, có thể dễ dàng xé nát kẻ thù. Chúng là biểu tượng của quyền lực và sự tôn nghiêm.",
+            "difficulty": "Khó",
+            "health": 120,
+            "damage": 45
         },
         "gau_tinh": {
             "name": "Gấu Tinh",
-            "successRate": 25,
+            "successRate": 12,
             "reward": { "min": 70, "max": 100 },
             "levelRequired": 5,
             "emoji": "🐻",
-            "loot": "linh_hon_gau_tinh"
+            "loot": "linh_hon_gau_tinh",
+            "description": "Gấu tinh khổng lồ, sức mạnh vô song",
+            "lore": "Gấu tinh với kích thước khổng lồ và sức mạnh phi thường. Chúng có thể dễ dàng nghiền nát đá và cây cối. Chỉ những chiến binh dũng cảm nhất mới dám thách thức.",
+            "difficulty": "Rất khó",
+            "health": 150,
+            "damage": 60
         }
     },
     "dungeon_tiers": {
         "nhan_gioi": {
             "name": "Nhân Giới",
             "cooldown": 5,
-            "successRate": 70,
+            "successRate": 50,
             "requirements": [],
             "rewards": {
                 "eggs_low": 15,
@@ -99,12 +154,14 @@
                 "ngoc_linh": { "min": 5, "max": 10 },
                 "equipment": 5
             },
-            "emoji": "🌿"
+            "emoji": "🌿",
+            "description": "Cõi của con người, nơi bắt đầu hành trình",
+            "lore": "Nhân Giới - nơi sinh sống của con người, đầy rẫy những thử thách cơ bản nhưng cần thiết để rèn luyện kỹ năng."
         },
         "thien_gioi": {
             "name": "Thiên Giới",
             "cooldown": 15,
-            "successRate": 50,
+            "successRate": 30,
             "requirements": ["bua_ho_menh"],
             "rewards": {
                 "eggs_medium": 25,
@@ -114,12 +171,14 @@
                 "equipment": 15,
                 "buff_items": 10
             },
-            "emoji": "⚡"
+            "emoji": "⚡",
+            "description": "Cõi của các vị thần, đầy thử thách",
+            "lore": "Thiên Giới - nơi cư ngụ của các vị thần và linh hồn cao cấp. Cần có Bùa Hộ Mệnh để bảo vệ khỏi sức mạnh thần thánh."
         },
         "ma_gioi": {
             "name": "Ma Giới",
             "cooldown": 30,
-            "successRate": 30,
+            "successRate": 15,
             "requirements": ["linh_dan_cao_cap", "level_5"],
             "rewards": {
                 "eggs_high": 35,
@@ -131,7 +190,9 @@
                 "mystery_chest": 5,
                 "dep_to_ong": 0.0001
             },
-            "emoji": "🔥"
+            "emoji": "🔥",
+            "description": "Cõi của ma quỷ, nguy hiểm tột cùng",
+            "lore": "Ma Giới - nơi tối tăm nhất, đầy rẫy ma quỷ và sinh vật hắc ám. Chỉ những chiến binh dũng cảm nhất với Linh Đan Cấp Cao mới dám thách thức."
         }
     },
     "special_events": {
@@ -163,11 +224,11 @@
         "weekly": 10080
     },
     "weapon_bonuses": {
-        "kiem_go": 0,
-        "kiem_sat": 10,
-        "kiem_bac": 20,
-        "kiem_vang": 30,
-        "kiem_than": 50,
+        "kiem_go": 5,
+        "kiem_sat": 15,
+        "kiem_bac": 25,
+        "kiem_vang": 35,
+        "kiem_than": 55,
         "dep_to_ong": 99
     },
     "fishing_gear_bonuses": {
