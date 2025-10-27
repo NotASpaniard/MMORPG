@@ -2,7 +2,7 @@
   "users": {
     "1180992570009067543": {
       "userId": "1180992570009067543",
-      "balance": 9873582,
+      "balance": 9872582,
       "daily": {
         "last": null,
         "streak": 0
@@ -70,6 +70,18 @@
         "eggsCollected": 0,
         "soulsCollected": 0,
         "ngocLinhCollected": 0
+      },
+      "pitySystem": {
+        "hunt": {
+          "consecutiveFails": 0,
+          "consecutiveWins": 0,
+          "lastResult": null
+        },
+        "dungeon": {
+          "consecutiveFails": 0,
+          "consecutiveWins": 0,
+          "lastResult": null
+        }
       }
     },
     "326514371876356097": {

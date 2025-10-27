@@ -297,18 +297,49 @@ export const slashBaucua: SlashCommand = {
       user.balance += profit;
       store.save();
       
+      // Tạo visual dice với emoji
+      const diceEmojis: { [key: string]: string } = {
+        'bầu': '🎃',
+        'cua': '🦀', 
+        'tôm': '🦐',
+        'cá': '🐟',
+        'gà': '🐓',
+        'nai': '🦌'
+      };
+      
+      const resultDice = results.map(r => diceEmojis[r]).join(' ');
+      const choiceEmoji = diceEmojis[choice];
+      
+      // Tạo progress bar cho wins
+      const winBar = '🟢'.repeat(wins) + '⚫'.repeat(3 - wins);
+      
       const embed = new EmbedBuilder()
-        .setTitle('🎲 Bầu Cua')
-        .setColor(profit > 0 ? '#4fc3f7' : '#f44336')
+        .setTitle('🎲 Bầu Cua Tôm Cá')
+        .setColor(profit > 0 ? '#4fc3f7' : profit < 0 ? '#f44336' : '#FFA500')
+        .setDescription(`**🎯 Lựa chọn của bạn:** ${choiceEmoji} **${choice.toUpperCase()}**`)
         .addFields(
-          { name: 'Kết quả', value: results.join(' | '), inline: true },
-          { name: 'Lựa chọn', value: choice, inline: true },
-          { name: 'Thắng', value: `${wins} lần`, inline: true },
-          { name: 'Cược', value: `${amount} V`, inline: true },
-          { name: 'Thắng', value: `${winnings} V`, inline: true },
-          { name: 'Lãi/Lỗ', value: `${profit >= 0 ? '+' : ''}${profit} V`, inline: true },
-          { name: 'Số dư', value: `${user.balance} V`, inline: false }
+          { 
+            name: '🎲 Kết Quả Xúc Xắc', 
+            value: `${resultDice}\n**${results.join(' | ').toUpperCase()}**`, 
+            inline: false 
+          },
+          { 
+            name: '📊 Thống Kê', 
+            value: `**Thắng:** ${wins}/3 lần\n**Thanh:** ${winBar}`, 
+            inline: true 
+          },
+          { 
+            name: '💰 Tài Chính', 
+            value: `**Cược:** ${amount.toLocaleString()} V\n**Thắng:** ${winnings.toLocaleString()} V\n**Lãi/Lỗ:** ${profit >= 0 ? '+' : ''}${profit.toLocaleString()} V`, 
+            inline: true 
+          },
+          { 
+            name: '💳 Số Dư', 
+            value: `**${user.balance.toLocaleString()} V**`, 
+            inline: true 
+          }
         )
+        .setFooter({ text: profit > 0 ? '🎉 Chúc mừng bạn thắng!' : profit < 0 ? '😢 Chúc may mắn lần sau!' : '🤝 Hòa vốn!' })
         .setTimestamp();
       
       await interaction.reply({ embeds: [embed] });
@@ -367,18 +398,50 @@ export const slashXocdia: SlashCommand = {
       user.balance += profit;
       store.save();
       
+      // Tạo visual dice với emoji
+      const diceEmojis = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+      const dice1Emoji = diceEmojis[dice1 - 1];
+      const dice2Emoji = diceEmojis[dice2 - 1];
+      
+      // Tạo visual cho choice
+      const choiceEmoji = choice === 'chẵn' ? '🔵' : '🔴';
+      const choiceText = choice === 'chẵn' ? 'CHẴN' : 'LẺ';
+      
+      // Tạo progress bar cho total
+      const totalBar = '█'.repeat(Math.min(total, 12)) + '░'.repeat(12 - Math.min(total, 12));
+      
       const embed = new EmbedBuilder()
-        .setTitle('🎲 Xóc Đĩa')
-        .setColor(profit > 0 ? '#4fc3f7' : '#f44336')
+        .setTitle('🎲 Xóc Đĩa Cổ Điển')
+        .setColor(profit > 0 ? '#4fc3f7' : profit < 0 ? '#f44336' : '#FFA500')
+        .setDescription(`**🎯 Lựa chọn của bạn:** ${choiceEmoji} **${choiceText}**`)
         .addFields(
-          { name: 'Kết quả', value: `${dice1} + ${dice2} = ${total} (${result})`, inline: true },
-          { name: 'Lựa chọn', value: choice, inline: true },
-          { name: 'Kết quả', value: isWin ? 'Thắng!' : 'Thua!', inline: true },
-          { name: 'Cược', value: `${amount} V`, inline: true },
-          { name: 'Thắng', value: `${winnings} V`, inline: true },
-          { name: 'Lãi/Lỗ', value: `${profit >= 0 ? '+' : ''}${profit} V`, inline: true },
-          { name: 'Số dư', value: `${user.balance} V`, inline: false }
+          { 
+            name: '🎲 Kết Quả Xúc Xắc', 
+            value: `${dice1Emoji} + ${dice2Emoji} = **${total}**\n**Kết quả:** ${result.toUpperCase()}`, 
+            inline: false 
+          },
+          { 
+            name: '📊 Thống Kê', 
+            value: `**Tổng:** ${total}/12\n**Thanh:** [${totalBar}] ${total}`, 
+            inline: true 
+          },
+          { 
+            name: '🎯 Kết Quả', 
+            value: isWin ? '🎉 **THẮNG!**' : '💀 **THUA!**', 
+            inline: true 
+          },
+          { 
+            name: '💰 Tài Chính', 
+            value: `**Cược:** ${amount.toLocaleString()} V\n**Thắng:** ${winnings.toLocaleString()} V\n**Lãi/Lỗ:** ${profit >= 0 ? '+' : ''}${profit.toLocaleString()} V`, 
+            inline: true 
+          },
+          { 
+            name: '💳 Số Dư', 
+            value: `**${user.balance.toLocaleString()} V**`, 
+            inline: true 
+          }
         )
+        .setFooter({ text: isWin ? '🎉 Chúc mừng bạn thắng!' : '😢 Chúc may mắn lần sau!' })
         .setTimestamp();
       
       await interaction.reply({ embeds: [embed] });

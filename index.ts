@@ -185,11 +185,11 @@ async function main(): Promise<void> {
     // Buttons
     if (interaction.isButton()) {
       const store = getStore();
-      const [action, userId, amountStr] = interaction.customId.split(':');
       
       // Blackjack buttons
-      if (action === 'bj_hit' || action === 'bj_stand' || action === 'bj_double') {
-        const gameId = `${userId}_${interaction.customId.split('_')[1]}`;
+      if (interaction.customId.startsWith('bj_')) {
+        // Parse gameId từ customId: bj_hit:userId_timestamp
+        const gameId = interaction.customId.split(':')[1];
         const game = blackjackGames.get(gameId);
         
         if (!game || game.userId !== interaction.user.id) {
@@ -201,6 +201,8 @@ async function main(): Promise<void> {
           await interaction.reply({ content: 'Game đã kết thúc.', ephemeral: true });
           return;
         }
+        
+        const action = interaction.customId.split(':')[0];
         
         if (action === 'bj_hit') {
           // Hit: thêm 1 lá bài
@@ -248,6 +250,9 @@ async function main(): Promise<void> {
         }
         return;
       }
+      
+      // Parse other buttons
+      const [action, userId, amountStr] = interaction.customId.split(':');
       
       if (action === 'quest_refresh') {
         // Nút trung gian: hiển thị nút xác nhận
