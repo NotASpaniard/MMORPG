@@ -2,13 +2,13 @@
   "users": {
     "1180992570009067543": {
       "userId": "1180992570009067543",
-      "balance": 9870125,
+      "balance": 9870675,
       "daily": {
         "last": null,
         "streak": 0
       },
-      "lastDaily": "",
-      "dailyStreak": 0,
+      "lastDaily": "Mon Oct 27 2025",
+      "dailyStreak": 1,
       "inventory": {},
       "quests": [
         {
@@ -27,13 +27,13 @@
           "done": false
         }
       ],
-      "xp": 30,
+      "xp": 55,
       "level": 1,
       "cooldowns": {
         "work": 1761351747531,
         "hunt": null,
         "fish": null,
-        "daily": null,
+        "daily": 1761665703558,
         "weekly": null,
         "dungeon_nhan": 1761436134614,
         "dungeon_thien": null,
